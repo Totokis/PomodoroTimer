@@ -4,7 +4,7 @@ namespace Tests.EditMode
 {
     public class TimerTests
     {
-        public class TimerSetterMethod
+        public class TimerSettersMethod
         {
             [Test]
             public void Set_Pause_Time()
@@ -49,6 +49,236 @@ namespace Tests.EditMode
                 Assert.AreEqual(timer.MinPauseTime, timer.GetPauseTime());
             }
             
+            [Test]
+            public void Set_0_In_Work()
+            {
+                var timer = new PomodoroTimerModel();
+                var value = 0;
+                timer.SetWorkTime(value);
+                Assert.AreEqual(timer.MinWorkValue, timer.GetWorkTime());
+            }
+            [Test]
+            public void Set_Smaller_Than_0_Pause()
+            {
+                var timer = new PomodoroTimerModel();
+                var value = -20;
+                timer.SetPauseTime(value);
+                Assert.AreEqual(timer.MinPauseTime, timer.GetPauseTime());
+            }
+            
+            [Test]
+            public void Set_Smaller_Than_0_Work()
+            {
+                var timer = new PomodoroTimerModel();
+                var value = -20;
+                timer.SetWorkTime(value);
+                Assert.AreEqual(timer.MinWorkValue, timer.GetWorkTime());
+            }
+            
+            [Test]
+            public void Increment_By_Value_Pause_Time()
+            {
+                var timer = new PomodoroTimerModel();
+                var previousValue = timer.GetPauseTime();
+                var value = 10;
+                timer.IncrementPause(value);
+                Assert.AreEqual(previousValue + value,timer.GetPauseTime());
+            }
+            
+            [Test]
+            public void Increment_By_Value_Work_Time()
+            {
+                var timer = new PomodoroTimerModel();
+                var previousValue = timer.GetWorkTime();
+                var value = 10;
+                timer.IncrementWork(value);
+                Assert.AreEqual(previousValue + value,timer.GetWorkTime());
+            }
+            
+            [Test]
+            public void Decrement_By_Value_Pause_Time()
+            {
+                var timer = new PomodoroTimerModel();
+                timer.SetPauseTime(50);
+                var previousValue = timer.GetPauseTime();
+                var value = 10;
+                timer.DecrementPause(value);
+                Assert.AreEqual(previousValue - value,timer.GetPauseTime());
+            }
+            
+            [Test]
+            public void Decrement_By_Value_Work_Time()
+            {
+                var timer = new PomodoroTimerModel();
+                timer.SetWorkTime(50);
+                var previousValue = timer.GetWorkTime();
+                var value = 10;
+                timer.DecrementWork(value);
+                Assert.AreEqual(previousValue - value,timer.GetWorkTime());
+            }
+        }
+
+        public class CountersForMinutesAndSeconds
+        {
+            [Test]
+            public void Start_Counting_And_Check_Minute_Values()
+            {
+                var timer = new PomodoroTimerModel();
+                timer.StartTimer();
+                Assert.AreEqual(timer.GetWorkTime(),timer.GetMinute());
+            }
+            [Test]
+            public void Start_Counting_And_Check_Seconds_Values()
+            {
+                var timer = new PomodoroTimerModel();
+                timer.StartTimer();
+                Assert.AreEqual(0,timer.GetSecond());
+            }
+            
+            [Test]
+            public void Start_Counting_And_Check_Session_Is_One()
+            {
+                var timer = new PomodoroTimerModel();
+                timer.StartTimer();
+                Assert.AreEqual(1,timer.GetActualSession());
+            }
+            [Test]
+            public void Start_Counting_And_Check_State()
+            {
+                var timer = new PomodoroTimerModel();
+                timer.StartTimer();
+                Assert.AreEqual(true, timer.IsWorkTime);
+            }
+            [Test]
+            public void Start_Counting_And_Check_Number_Of_Sessions_Is_Greater_Than_0()
+            {
+                var timer = new PomodoroTimerModel();
+                timer.StartTimer();
+                Assert.Greater(timer.NumberOfSessions,0);
+            }
+
+            [Test]
+            public void Start_Work_Timer_And_Count_Down()
+            {
+                var timer = new PomodoroTimerModel();
+                timer.StartTimer();
+                var previousMinute = timer.GetMinute();
+                timer.CountDown();
+                var actualSecond = timer.GetSecond();
+                var actualMinute = timer.GetMinute();
+                Assert.AreEqual(59,actualSecond);
+                Assert.AreEqual(previousMinute-1,actualMinute);
+            }
+            
+            [Test]
+            public void Set_Work_Timer_And_Count_Down()
+            {
+                var timer = new PomodoroTimerModel();
+                timer.StartTimer();
+                timer.SetTimer(59,59);
+                var previousSecond = timer.GetSecond();
+                var previousMinute = timer.GetMinute();
+                timer.CountDown();
+                var actualSecond = timer.GetSecond();
+                var actualMinute = timer.GetMinute();
+                Assert.AreEqual(previousSecond-1,actualSecond);
+                Assert.AreEqual(previousMinute,actualMinute);
+            }
+            
+
+            [Test]
+            public void Pause_Timer()
+            {
+                var timer = new PomodoroTimerModel();
+                timer.StartTimer();
+                var previousSecond = timer.GetSecond();
+                var previousMinute = timer.GetMinute();
+                timer.PauseTimer();
+                timer.CountDown();
+                var actualSecond = timer.GetSecond();
+                var actualMinute = timer.GetMinute();
+                Assert.AreEqual(previousSecond,actualSecond);
+                Assert.AreEqual(previousMinute,actualMinute);
+            }
+            
+            [Test]
+            public void Resume_Timer()
+            {
+                var timer = new PomodoroTimerModel();
+                timer.StartTimer();
+                timer.SetTimer(59,59);
+                var previousSecond = timer.GetSecond();
+                timer.PauseTimer();
+                timer.ResumeTimer();
+                timer.CountDown();
+                var actualSecond = timer.GetSecond();
+                Assert.AreEqual(previousSecond-1,actualSecond);
+            }
+
+            [Test]
+            public void Timer_Gets_0_And_Is_Not_Work_Time()
+            {
+                var timer = new PomodoroTimerModel();
+                timer.StartTimer();
+                timer.SetTimer(0,0);
+                timer.CountDown();
+                Assert.IsFalse(timer.IsWorkTime);
+            }
+            
+            [Test]
+            public void Timer_Gets_0_And_Is_Pause_Time()
+            {
+                var timer = new PomodoroTimerModel();
+                timer.StartTimer();
+                timer.SetTimer(0,0);
+                timer.CountDown();
+                Assert.IsTrue(timer.IsPauseTime);
+            }
+            
+            [Test]
+            public void Pause_Timer_Gets_0_And_Is_Work_Time()
+            {
+                var timer = new PomodoroTimerModel();
+                timer.SetPauseTime(10);
+                timer.SetWorkTime(60);
+                timer.StartTimer();
+                timer.SetTimer(0,0);
+                timer.CountDown();//work ends, pause starts
+                timer.StartTimer();
+                timer.SetTimer(0,0);
+                timer.CountDown();//pause ends, work ends
+                Assert.IsTrue(timer.IsWorkTime);
+            }
+            
+            [Test]
+            public void Work_Time_Ends_And_Start_Pause_Timer()
+            {
+                var timer = new PomodoroTimerModel();
+                timer.SetPauseTime(10);
+                timer.SetWorkTime(60);
+                timer.StartTimer();
+                timer.SetTimer(0,0);
+                timer.CountDown();
+                timer.StartTimer();
+                Assert.AreEqual(timer.GetPauseTime(),timer.GetMinute());
+            }
+            
+             
+            [Test]
+            public void Pause_Time_Ends_And_Start_Work_Timer()
+            {
+                var timer = new PomodoroTimerModel();
+                timer.SetPauseTime(10);
+                timer.SetWorkTime(60);
+                timer.StartTimer();
+                timer.SetTimer(0,0);
+                timer.CountDown();//work ends, pause starts
+                timer.StartTimer();
+                timer.SetTimer(0,0);
+                timer.CountDown();//pause ends, work ends
+                timer.StartTimer();
+                Assert.AreEqual(timer.GetWorkTime(),timer.GetMinute());
+            }
         }
     }
 }
