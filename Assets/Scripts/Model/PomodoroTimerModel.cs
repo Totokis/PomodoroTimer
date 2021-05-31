@@ -1,7 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 public class PomodoroTimerModel
 {
     private const int MAX_PAUSE_VALUE = 99;
@@ -26,6 +22,12 @@ public class PomodoroTimerModel
 
     public bool IsPauseTime => _isPauseTime;
     public int NumberOfSessions => _numberOfSessions;
+
+    public PomodoroTimerModel()
+    {
+        _workTime = 1;
+        _pauseTime = 1;
+    }
     
     public void SetPauseTime(int value)
     {
@@ -79,6 +81,7 @@ public class PomodoroTimerModel
     }
     public void StartTimer()
     {
+        _paused = false;
         if (_isWorkTime)
         {
             if (_actualSession == 0)
@@ -118,7 +121,10 @@ public class PomodoroTimerModel
     }
     public void CountDown()
     {
+        
         if (_paused)
+            return;
+        if (_actualSession == 0)
             return;
 
         if (_secondsCounter == 0)
@@ -126,6 +132,7 @@ public class PomodoroTimerModel
             if (_minuteCounter == 0)
             {
                 SwitchState();
+                return;
             }
             _secondsCounter = 59;
             _minuteCounter--;
@@ -147,7 +154,7 @@ public class PomodoroTimerModel
             _isPauseTime = false;
             _isWorkTime = true;
         }
-        
+        _paused = true;
     }
     
     public void SetTimer(int minute, int second)

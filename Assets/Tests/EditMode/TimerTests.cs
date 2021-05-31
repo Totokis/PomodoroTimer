@@ -7,6 +7,13 @@ namespace Tests.EditMode
         public class TimerSettersMethod
         {
             [Test]
+            public void Pause_And_Work_Time_Default_Start_From_1()
+            {
+                var timer = new PomodoroTimerModel();
+                Assert.AreEqual( 1,timer.GetWorkTime());
+                Assert.AreEqual(1,timer.GetPauseTime());
+            }
+            [Test]
             public void Set_Pause_Time()
             {
                 var value = 59;
@@ -121,6 +128,13 @@ namespace Tests.EditMode
         public class CountersForMinutesAndSeconds
         {
             [Test]
+            public void Double_Start_Check()
+            {
+                var timer = new PomodoroTimerModel();
+                timer.StartTimer();
+                Assert.AreEqual(timer.GetWorkTime(),timer.GetMinute());
+            }
+            [Test]
             public void Start_Counting_And_Check_Minute_Values()
             {
                 var timer = new PomodoroTimerModel();
@@ -148,13 +162,6 @@ namespace Tests.EditMode
                 var timer = new PomodoroTimerModel();
                 timer.StartTimer();
                 Assert.AreEqual(true, timer.IsWorkTime);
-            }
-            [Test]
-            public void Start_Counting_And_Check_Number_Of_Sessions_Is_Greater_Than_0()
-            {
-                var timer = new PomodoroTimerModel();
-                timer.StartTimer();
-                Assert.Greater(timer.NumberOfSessions,0);
             }
 
             [Test]
@@ -278,6 +285,41 @@ namespace Tests.EditMode
                 timer.CountDown();//pause ends, work ends
                 timer.StartTimer();
                 Assert.AreEqual(timer.GetWorkTime(),timer.GetMinute());
+            }
+            
+            [Test]
+            public void Count_Down_Disabled_When_Actual_Session_Is_0()
+            {
+                var timer = new PomodoroTimerModel();
+                var preMinute = timer.GetMinute();
+                var preSecond = timer.GetSecond();
+                timer.CountDown();
+                Assert.AreEqual(preSecond,timer.GetSecond());
+            }
+
+            [Test]
+            public void Minutes_Ends_With_0()
+            {
+                var timer = new PomodoroTimerModel();
+                timer.StartTimer();
+                timer.SetTimer(0,1);
+                timer.CountDown();
+                timer.CountDown();
+                Assert.AreEqual(0,timer.GetMinute());
+                Assert.AreEqual(0,timer.GetSecond());
+            }
+
+            [Test]
+            public void Count_Down_Dont_Switch_States()
+            {
+                var timer = new PomodoroTimerModel();
+                timer.StartTimer();
+                timer.SetTimer(0,1);
+                timer.CountDown();
+                timer.CountDown();
+                var pauseTime=  timer.IsPauseTime;
+                timer.CountDown();
+                Assert.AreEqual(pauseTime,timer.IsPauseTime);
             }
         }
     }
