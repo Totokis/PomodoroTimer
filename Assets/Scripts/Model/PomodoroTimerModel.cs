@@ -1,3 +1,5 @@
+using UnityEngine;
+
 public class PomodoroTimerModel
 {
     private const int MAX_PAUSE_VALUE = 99;
@@ -11,16 +13,17 @@ public class PomodoroTimerModel
     
     private bool _isWorkTime = true;
     private bool _isPauseTime = false;
+    private bool _done = false;
     private bool _paused;
     private int _workTime;
     private int _pauseTime;
     private int _numberOfSessions = 1;
     private int _actualSession = 0;
-    private int _minuteCounter;
-    private int _secondsCounter;
+    private int _minuteCounter = 0;
+    private int _secondsCounter = 0;
     public bool IsWorkTime => _isWorkTime;
-
     public bool IsPauseTime => _isPauseTime;
+    public bool Done => _done;
     public int NumberOfSessions => _numberOfSessions;
 
     public PomodoroTimerModel()
@@ -82,26 +85,35 @@ public class PomodoroTimerModel
     public void StartTimer()
     {
         _paused = false;
-        if (_isWorkTime)
+        if (_minuteCounter == 0 && _secondsCounter == 0)
         {
-            if (_actualSession == 0)
+            if (_isWorkTime)
             {
-                _actualSession = 1;
-                _minuteCounter = _workTime;
-                _secondsCounter = 0;
+                if (_actualSession == 0)
+                {
+                    _actualSession = 1;
+                    _minuteCounter = _workTime;
+                    _secondsCounter = 0;
+                }
+                else
+                {
+                    _actualSession++;
+                    _minuteCounter = _workTime;
+                    _secondsCounter = 0;
+                }
             }
-            else
+            else if(_isPauseTime)
             {
-                _actualSession++;
-                _minuteCounter = _workTime;
+                _minuteCounter = _pauseTime;
                 _secondsCounter = 0;
             }
         }
-        else if(_isPauseTime)
-        {
-            _minuteCounter = _pauseTime;
-            _secondsCounter = 0;
-        }
+    }
+    private void ResetTimer()
+    {
+        _actualSession = 0;
+        _isWorkTime = true;
+        _isPauseTime = false;
     }
     public int GetMinute()
     {
@@ -111,7 +123,7 @@ public class PomodoroTimerModel
     {
         return _secondsCounter;
     }
-    public double GetActualSession()
+    public int GetActualSession()
     {
         return _actualSession;
     }
@@ -146,6 +158,8 @@ public class PomodoroTimerModel
     {
         if (_isWorkTime)
         {
+            if (_actualSession == _numberOfSessions)
+                _done = true;
             _isWorkTime = false;
             _isPauseTime = true;
         }
@@ -165,5 +179,9 @@ public class PomodoroTimerModel
     public void ResumeTimer()
     {
         _paused = false;
+    }
+    public void SetNumberOfSessions(int value)
+    {
+        _numberOfSessions = value < 1 ? 1 : value;
     }
 }

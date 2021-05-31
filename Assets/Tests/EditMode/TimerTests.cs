@@ -123,6 +123,34 @@ namespace Tests.EditMode
                 timer.DecrementWork(value);
                 Assert.AreEqual(previousValue - value,timer.GetWorkTime());
             }
+            
+            [Test]
+            public void Session_Number_Greater_Or_Equal_Than_1()
+            {
+                var timer = new PomodoroTimerModel();
+                Assert.GreaterOrEqual(timer.NumberOfSessions,1);
+            }
+            
+            [Test]
+            public void Session_Number_Set_Always_Greater_Or_Equal_Than_1()
+            {
+                var timer = new PomodoroTimerModel();
+                var value = -5;
+                timer.SetNumberOfSessions(value);
+                Assert.GreaterOrEqual(timer.NumberOfSessions,1);
+            }
+            
+            [Test]
+            public void Start_Timer_Twice_Not_Allowed()
+            {
+                var timer = new PomodoroTimerModel();
+                timer.StartTimer();
+                timer.CountDown();
+                var preActualSession = timer.GetActualSession();
+                timer.StartTimer();
+                var actualSession = timer.GetActualSession();
+                Assert.AreEqual(preActualSession,actualSession);
+            }
         }
 
         public class CountersForMinutesAndSeconds
@@ -320,6 +348,18 @@ namespace Tests.EditMode
                 var pauseTime=  timer.IsPauseTime;
                 timer.CountDown();
                 Assert.AreEqual(pauseTime,timer.IsPauseTime);
+            }
+            
+            [Test]
+            public void When_Sessions_Are_Done_Set_State_To_Done()
+            {
+                var timer = new PomodoroTimerModel();
+                timer.SetPauseTime(10);
+                timer.SetWorkTime(60);
+                timer.StartTimer();
+                timer.SetTimer(0,0);
+                timer.CountDown();//work ends, pause starts
+                Assert.IsTrue(timer.Done);
             }
         }
     }
