@@ -1,11 +1,10 @@
-using UnityEngine;
 
 public class PomodoroTimerModel
 {
     private const int MAX_PAUSE_VALUE = 99;
-    private const int MIN_PAUSE_VALUE = 0;
+    private const int MIN_PAUSE_VALUE = 1;
     private const int MAX_WORK_VALUE = 99;
-    private const int MIN_WORK_VALUE = 0;
+    private const int MIN_WORK_VALUE = 1;
     public int MaxPauseValue => MAX_PAUSE_VALUE;
     public int MinPauseTime => MIN_PAUSE_VALUE;
     public int MaxWorkValue => MAX_WORK_VALUE;

@@ -30,7 +30,7 @@ public class PomodoroBehaviourTest : MonoBehaviour
         start.onClick.AddListener(_pomodoroTimerModel.StartTimer);
         pause.onClick.AddListener(_pomodoroTimerModel.PauseTimer);
         resume.onClick.AddListener(_pomodoroTimerModel.ResumeTimer);
-        SetTimeTo_00_01.onClick.AddListener(()=>_pomodoroTimerModel.SetTimer(0,1));
+       
     }
 
     private void Update()
