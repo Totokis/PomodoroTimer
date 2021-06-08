@@ -5,11 +5,11 @@ using UnityEngine;
 
 public class PomodoroBehaviour : MonoBehaviour
 {
-    private static PomodoroTimerModel _pomodoroTimerModel = new PomodoroTimerModel();
+    static PomodoroTimerModel _pomodoroTimerModel = new PomodoroTimerModel();
     public PomodoroTimerModel PomodoroTimerModel => _pomodoroTimerModel;
     public static PomodoroBehaviour Instance { get; private set; }
 
-    private void Awake()
+    void Awake()
     {
         if (Instance == null)
         {

@@ -151,6 +151,32 @@ namespace Tests.EditMode
                 var actualSession = timer.GetActualSession();
                 Assert.AreEqual(preActualSession,actualSession);
             }
+            
+            [Test]
+            public void Set_Actual_Session()
+            {
+                var timer = new PomodoroTimerModel();
+                var value = 5;
+                timer.SetActualSession(value);
+                Assert.AreEqual(value,timer.GetActualSession());
+            }
+            
+            
+            [Test]
+            public void Actual_Session_Not_Below_0()
+            {
+                var timer = new PomodoroTimerModel();
+                var value = -5;
+                timer.SetActualSession(value);
+                Assert.AreEqual(1, timer.GetActualSession());
+            }
+            
+            [Test]
+            public void When_Done_Set_Pause()
+            {
+                var timer = new PomodoroTimerModel { Done = true };
+                Assert.IsTrue(timer.Paused);
+            }
         }
 
         public class CountersForMinutesAndSeconds

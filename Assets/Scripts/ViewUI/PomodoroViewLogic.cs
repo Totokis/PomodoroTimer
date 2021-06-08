@@ -15,15 +15,20 @@ public class PomodoroViewLogic : MonoBehaviour
 
     void Awake()
     {
-        startButton.onClick.AddListener(() => {
-            LeanTween.moveX(twoPanels, 0f, 0.3f);
-        });
-        endButton.onClick.AddListener(() => {
-            LeanTween.moveX(twoPanels, 1080f, 0.3f);
-        });
-        
+        startButton.onClick.AddListener(SwitchToTimer);
+        endButton.onClick.AddListener(SwitchToSetter);
     }
-    
+    void SwitchToSetter()
+    {
+
+        LeanTween.moveX(twoPanels, 1080f, 0.3f);
+    }
+    public void SwitchToTimer()
+    {
+
+        LeanTween.moveX(twoPanels, 0f, 0.3f);
+    }
+
     void Update()
     {
         

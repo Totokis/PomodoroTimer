@@ -3,7 +3,8 @@
     "rootNamespace": "",
     "references": [
         "Unity.TextMeshPro",
-        "LeanTween"
+        "LeanTween",
+        "Unity.Notifications.Android"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

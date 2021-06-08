@@ -1,14 +1,14 @@
 
 public class PomodoroTimerModel
 {
-    private const int MAX_PAUSE_VALUE = 99;
-    private const int MIN_PAUSE_VALUE = 1;
-    private const int MAX_WORK_VALUE = 99;
-    private const int MIN_WORK_VALUE = 1;
-    public int MaxPauseValue => MAX_PAUSE_VALUE;
-    public int MinPauseTime => MIN_PAUSE_VALUE;
-    public int MaxWorkValue => MAX_WORK_VALUE;
-    public int MinWorkValue => MIN_WORK_VALUE;
+    private const int MAXPauseValue = 99;
+    private const int MINPauseValue = 1;
+    private const int MAXWorkValue = 99;
+    private const int MINWorkValue = 1;
+    public int MaxPauseValue => MAXPauseValue;
+    public int MinPauseTime => MINPauseValue;
+    public int MaxWorkValue => MAXWorkValue;
+    public int MinWorkValue => MINWorkValue;
     
     private bool _isWorkTime = true;
     private bool _isPauseTime = false;
@@ -22,7 +22,14 @@ public class PomodoroTimerModel
     private int _secondsCounter = 0;
     public bool IsWorkTime => _isWorkTime;
     public bool IsPauseTime => _isPauseTime;
-    public bool Done => _done;
+    public bool Done { get => _done; set
+        {
+            _done = value;
+            if (value)
+                _paused = true;
+        } 
+    }
+    public bool Paused => _paused;
     public int NumberOfSessions => _numberOfSessions;
 
     public PomodoroTimerModel()
@@ -33,10 +40,10 @@ public class PomodoroTimerModel
     
     public void SetPauseTime(int value)
     {
-        if (value > MAX_PAUSE_VALUE)
-            _pauseTime = MAX_PAUSE_VALUE;
-        else if (value < MIN_PAUSE_VALUE)
-            _pauseTime = MIN_PAUSE_VALUE;
+        if (value > MAXPauseValue)
+            _pauseTime = MAXPauseValue;
+        else if (value < MINPauseValue)
+            _pauseTime = MINPauseValue;
         else
         {
             _pauseTime = value;
@@ -48,10 +55,10 @@ public class PomodoroTimerModel
     }
     public void SetWorkTime(int value)
     {
-        if (value > MAX_WORK_VALUE)
-            _workTime = MAX_WORK_VALUE;
-        else if (value < MIN_WORK_VALUE)
-            _workTime = MIN_WORK_VALUE;
+        if (value > MAXWorkValue)
+            _workTime = MAXWorkValue;
+        else if (value < MINWorkValue)
+            _workTime = MINWorkValue;
         else
         {
             _workTime = value;
@@ -182,5 +189,10 @@ public class PomodoroTimerModel
     public void SetNumberOfSessions(int value)
     {
         _numberOfSessions = value < 1 ? 1 : value;
+    }
+    public void SetActualSession(int value)
+    {
+        _actualSession = value < 1 ? 1 : value;
+
     }
 }

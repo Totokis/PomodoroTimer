@@ -23,8 +23,10 @@ public class PomodoroTimerViewModel : MonoBehaviour
     [SerializeField] TMP_Text seconds;
     [SerializeField] TMP_Text session;
     [SerializeField] TMP_Text state;
-    UnityEvent stateChanged = new UnityEvent();
-    UnityEvent workDone = new UnityEvent();
+    public string State { get => state.text; set => state.text = value; }
+    
+    public UnityEvent stateChanged = new UnityEvent();
+    public UnityEvent workDone = new UnityEvent();
     string _previousState = "Work";
     float _nextUpdate;
     void Awake()
@@ -45,6 +47,9 @@ public class PomodoroTimerViewModel : MonoBehaviour
             pauseButton.gameObject.SetActive(true);
             startButton.gameObject.SetActive(false);
             
+        });
+        endButton.onClick.AddListener(() => {
+            PomodoroBehaviour.Instance.PomodoroTimerModel.Done = true;
         });
         SetTimeTo_00_01.onClick.AddListener(()=>PomodoroBehaviour.Instance.PomodoroTimerModel.SetTimer(0,1));
         pauseButton.gameObject.SetActive(true);
