@@ -6,6 +6,26 @@ namespace Tests.EditMode
     {
         public class TimerSettersMethod
         {
+            
+            [Test]
+            public void Set_State()
+            {
+                var timer = new PomodoroTimerModel();
+                var value = -10;
+                timer.SetTimer(value,value);
+                Assert.AreEqual(0,timer.GetMinute());
+                Assert.AreEqual(1,timer.GetSecond());
+            }
+            [Test]
+            public void Set_Timer_Below_0_Is_Not_Allowed()
+            {
+                var timer = new PomodoroTimerModel();
+                var value = -10;
+                timer.SetTimer(value,value);
+                Assert.AreEqual(0,timer.GetMinute());
+                Assert.AreEqual(1,timer.GetSecond());
+            }
+            
             [Test]
             public void Pause_And_Work_Time_Default_Start_From_1()
             {

@@ -30,7 +30,7 @@ public class PulseButton : MonoBehaviour
     void PulseAnimation()
     {
         LeanTween.scale(_rect, new Vector2(scale, scale), time).setLoopPingPong(3).setOnComplete(() => {
-            if (isActiveAndEnabled&&_animate)
+            if (_animate)
             {
                 PulseAnimation();
             }

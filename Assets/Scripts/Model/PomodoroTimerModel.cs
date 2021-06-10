@@ -20,8 +20,23 @@ public class PomodoroTimerModel
     private int _actualSession = 0;
     private int _minuteCounter = 0;
     private int _secondsCounter = 0;
-    public bool IsWorkTime => _isWorkTime;
-    public bool IsPauseTime => _isPauseTime;
+    public bool IsWorkTime
+    {
+        get => _isWorkTime;
+        set
+        {
+            _isWorkTime = value;
+            _isPauseTime = !value;
+        }
+    }
+    public bool IsPauseTime  {
+        get => _isPauseTime;
+        set
+        {
+            _isPauseTime = value;
+            _isWorkTime = !value;
+        }
+    }
     public bool Done { get => _done; set
         {
             _done = value;
@@ -179,8 +194,8 @@ public class PomodoroTimerModel
     
     public void SetTimer(int minute, int second)
     {
-        _minuteCounter = minute;
-        _secondsCounter = second;
+        _minuteCounter = minute<0?0:minute;
+        _secondsCounter = second<0?1:second;
     }
     public void ResumeTimer()
     {

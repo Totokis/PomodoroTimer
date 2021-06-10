@@ -1,52 +1,106 @@
 using System;
-using TMPro;
-using Unity.Notifications.Android;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class TimeStateKeeper : MonoBehaviour
 {
-    [SerializeField] TMP_Text logger;
+    [SerializeField] PomodoroTimerViewModel _pomodoroTimerViewModel;
     [SerializeField] Button startButton;
     [SerializeField] Button pauseButton;
-    [SerializeField] PomodoroTimerViewModel pomodoroTimer;
-    bool _isWorking = false;
+    [SerializeField] Button endButton; 
+    bool stateChanged = false;
+    [SerializeField] bool isWorking = false;
+    bool isStateLoaded = false;
+    bool isStateSaved = false;
+    static string loggerMessage;
 
-    private void Start()
+    private void Awake()
     {
-        Screen.sleepTimeout = SleepTimeout.NeverSleep;
-        var c = new AndroidNotificationChannel()
+        endButton.onClick.AddListener(() => {
+            isWorking = false;
+        });
+        
+        startButton.onClick.AddListener(() => {
+            isWorking = true;
+        });
+        
+    }
+
+    private void OnApplicationPause(bool pauseStatus)
+    {
+        if (pauseStatus)
         {
-            Id = "channel_id",
-            Name = "Default Channel",
-            Importance = Importance.High,
-            Description = "Generic notifications",
-            EnableVibration = true,
-        };
-        AndroidNotificationCenter.RegisterNotificationChannel(c);
+            SaveStateOnPause();
+        }
+        else
+        {
+            LoadState();
+            StartCoroutine(TimerSaveState(15));
+        }
     }
     
-    void Awake()
+    private void OnApplicationFocus(bool hasFocus)
     {
-        Application.runInBackground = false;
-        startButton.onClick.AddListener((() => {
-            _isWorking = true;
-        }));
-        
+        if (!hasFocus)
+        {
+            SaveStateOnPause();
+        }
+        else
+        {
+            LoadState();
+            StartCoroutine(TimerSaveState(15));
+        }
     }
-    void ReadFromPlayerPrefs()
+    private IEnumerator TimerSaveState(int seconds)
     {
-        if (PlayerPrefs.GetInt("IsAlreadyWorking") != 1)
+        while (!isStateSaved)
+        {
+            yield return new WaitForSeconds(seconds);
+            yield return SaveStateOnCoroutine();
+        }
+    }
+
+    private void LoadState()
+    { 
+        loggerMessage = "";
+        if (isStateLoaded)
             return;
 
-        var saveCompletedNotification = new AndroidNotification
-        {
-            Title = "Read Completed!",
-            FireTime = System.DateTime.Now,
-        };
-        AndroidNotificationCenter.SendNotification(saveCompletedNotification, "channel_id");
+        // if (PomodoroBehaviour.Instance.PomodoroTimerModel.Done)
+        // {
+        //     loggerMessage += "Done: True\n";
+        //     return;
+        // }
+        // loggerMessage += "Done: False\n";
+        //
+        // if (PlayerPrefs.GetInt("IsSaved") == 0)
+        // {
+        //     loggerMessage += "IsSaved: False\n";
+        //     return;
+        // }
+        // loggerMessage += "IsSaved: True\n";
+        //
+        // if (PlayerPrefs.GetInt("IsWorking") == 0)
+        // {
+        //     loggerMessage += "IsWorking: False\n";
+        //     return;
+        // }
+        // loggerMessage += "IsWorking: True\n";
+        //
+        // if (isFreshStarted)
+        // {
+        //     loggerMessage += "IsFreshStarted: True\n";
+        //     startButton.onClick.Invoke();
+        //     isFreshStarted = false;
+        // }
+        //
+        // LoadFromPlayerPrefs();
         
-        var time = new DateTime(long.Parse(PlayerPrefs.GetString("Time")));
+        if (PlayerPrefs.GetInt("IsWorking") == 0)
+            return;
+        
+        var time = new DateTime(long.Parse(PlayerPrefs.GetString("SaveTime")));
         var minutes = PlayerPrefs.GetInt("Minutes");
         var seconds = PlayerPrefs.GetInt("Seconds");
         var workTime = PlayerPrefs.GetInt("WorkTime");
@@ -58,121 +112,98 @@ public class TimeStateKeeper : MonoBehaviour
 
         if (paused == 0)
         {
-            logger.text = "Not paused";
             var timeDifference = DateTime.Now - time;
             var restTime = new TimeSpan(0, minutes, seconds);
             var newMinutes = minutes - timeDifference.Minutes;
             var newSeconds = seconds - timeDifference.Seconds;
-            logger.text=$"Your application was closed {timeDifference.Minutes}:{timeDifference.Seconds} and you have {newMinutes}:{newSeconds}";
-            PomodoroBehaviour.Instance.PomodoroTimerModel.SetTimer(newMinutes >= 0 ? newMinutes : 0, newSeconds >= 0 ? newSeconds : 1);
             PomodoroBehaviour.Instance.PomodoroTimerModel.SetNumberOfSessions(numberOfSessions);
             PomodoroBehaviour.Instance.PomodoroTimerModel.SetActualSession(actualSession);
             PomodoroBehaviour.Instance.PomodoroTimerModel.SetPauseTime(pauseTime);
             PomodoroBehaviour.Instance.PomodoroTimerModel.SetWorkTime(workTime);
-            pomodoroTimer.State = state;
+            PomodoroBehaviour.Instance.PomodoroTimerModel.SetTimer(newMinutes >= 0 ? newMinutes : 0, newSeconds >= 0 ? newSeconds : 1);
+            PomodoroBehaviour.Instance.PomodoroTimerModel.IsWorkTime = Convert.ToBoolean(PlayerPrefs.GetInt("IsWorkTime"));
             startButton.onClick.Invoke();
         }
         else
         {
-            logger.text = "Paused";
-            PomodoroBehaviour.Instance.PomodoroTimerModel.SetTimer(minutes,seconds);
             PomodoroBehaviour.Instance.PomodoroTimerModel.SetNumberOfSessions(numberOfSessions);
             PomodoroBehaviour.Instance.PomodoroTimerModel.SetActualSession(actualSession);
             PomodoroBehaviour.Instance.PomodoroTimerModel.SetPauseTime(pauseTime);
             PomodoroBehaviour.Instance.PomodoroTimerModel.SetWorkTime(workTime);
             PomodoroBehaviour.Instance.PomodoroTimerModel.PauseTimer();
-            pomodoroTimer.State = state;
+            PomodoroBehaviour.Instance.PomodoroTimerModel.SetTimer(minutes,seconds);
+            PomodoroBehaviour.Instance.PomodoroTimerModel.IsWorkTime = Convert.ToBoolean(PlayerPrefs.GetInt("IsWorkTime"));
+            
             startButton.onClick.Invoke();
             pauseButton.onClick.Invoke();
         }
-    }
 
-    void OnEnable()
-    {
-        CancelNotifications();
-        ReadFromPlayerPrefs();
+        isStateLoaded = true;
+        isStateSaved = false;
+        PlayerPrefs.DeleteAll();
     }
-    
-    void OnApplicationPause(bool pauseStatus)
+    private void LoadFromPlayerPrefs()
     {
-      
-        if (pauseStatus)
+        //Get rest of time
+        var minutes = PlayerPrefs.GetInt("Minutes");
+        var seconds = PlayerPrefs.GetInt("Seconds");
+        //Get save time
+        if(PlayerPrefs.GetInt("Paused")==0)
         {
-            CancelNotifications();
-            MakeNotification();
-            SaveToPlayerPrefs();
+            var time = new DateTime(long.Parse(PlayerPrefs.GetString("SaveTime")));
+            //Get difference
+            var difference = DateTime.Now - time;
+            var restOfTime = new TimeSpan(0, minutes, seconds);
+
+            var newTime = restOfTime - difference;
+            loggerMessage += $"Saved at: {time.ToShortTimeString()}\n" +
+                             $"You had left {minutes} minutes {seconds} seconds\n" +
+                             $"You've paused app for {difference}\n" +
+                             $"So now you have {newTime} left";
+            minutes = newTime.Minutes;
+            seconds = newTime.Seconds;
         }
         else
         {
-            CancelNotifications();
-            ReadFromPlayerPrefs();
+            pauseButton.onClick.Invoke();
         }
+        
+        PomodoroBehaviour.Instance.PomodoroTimerModel.SetTimer(minutes, seconds);
+        PomodoroBehaviour.Instance.PomodoroTimerModel.SetActualSession(PlayerPrefs.GetInt("ActualSession"));
+        PomodoroBehaviour.Instance.PomodoroTimerModel.SetNumberOfSessions(PlayerPrefs.GetInt("NumberOfSessions"));
+        PomodoroBehaviour.Instance.PomodoroTimerModel.SetPauseTime(PlayerPrefs.GetInt("PauseTime"));
+        PomodoroBehaviour.Instance.PomodoroTimerModel.SetWorkTime(PlayerPrefs.GetInt("WorkTime"));
+        Logger.Instance.Text = loggerMessage;
     }
-    
-
-    void OnApplicationFocus(bool hasFocus)
+    private void SaveStateOnPause()
     {
-       
-        if (!hasFocus)
-        {
-            CancelNotifications();
-            MakeNotification();
-            SaveToPlayerPrefs();
-        }
-        else
-        {
-            CancelNotifications();
-            ReadFromPlayerPrefs();
-        }
+        if (PomodoroBehaviour.Instance.PomodoroTimerModel.Done)
+            return;
+        SetIntoPlayerPrefs();
+        isStateLoaded = false;
+        isStateSaved = true;
     }
 
-    void SaveToPlayerPrefs()
+    private IEnumerator SaveStateOnCoroutine()
     {
-        if (_isWorking&&!PomodoroBehaviour.Instance.PomodoroTimerModel.Done)
-        {
-            PlayerPrefs.SetInt("IsAlreadyWorking",1);
-            PlayerPrefs.SetString("Time",DateTime.Now.Ticks.ToString());
-            PlayerPrefs.SetInt("Minutes",PomodoroBehaviour.Instance.PomodoroTimerModel.GetMinute());
-            PlayerPrefs.SetInt("Seconds",PomodoroBehaviour.Instance.PomodoroTimerModel.GetSecond());
-            PlayerPrefs.SetInt("WorkTime",PomodoroBehaviour.Instance.PomodoroTimerModel.GetWorkTime());
-            PlayerPrefs.SetInt("PauseTime",PomodoroBehaviour.Instance.PomodoroTimerModel.GetPauseTime());
-            PlayerPrefs.SetInt("ActualSession",PomodoroBehaviour.Instance.PomodoroTimerModel.GetActualSession());
-            PlayerPrefs.SetInt("NumberOfSessions",PomodoroBehaviour.Instance.PomodoroTimerModel.NumberOfSessions);
-            PlayerPrefs.SetString("State",pomodoroTimer.State);
-            PlayerPrefs.SetInt("Paused",PomodoroBehaviour.Instance.PomodoroTimerModel.Paused?1:0);
-            PlayerPrefs.Save();
-        }
-        else
-        {
-            PlayerPrefs.DeleteAll();
-        }
+        if (PomodoroBehaviour.Instance.PomodoroTimerModel.Done)
+            yield break;
+        SetIntoPlayerPrefs();
     }
-    
-    private void MakeNotification()
+    private void SetIntoPlayerPrefs()
     {
-        if (!PomodoroBehaviour.Instance.PomodoroTimerModel.Paused)
-        {
-            var minutes = PomodoroBehaviour.Instance.PomodoroTimerModel.GetMinute();
-            var seconds = PomodoroBehaviour.Instance.PomodoroTimerModel.GetSecond();
-            var timerEndsNotification = new AndroidNotification
-            {
-                Title = "Times end",
-                Text = pomodoroTimer.State + $"'s ends after {minutes}:{seconds}s !",
-                FireTime = System.DateTime.Now.AddSeconds(minutes * 60 + seconds)
-            };
-            AndroidNotificationCenter.SendNotification(timerEndsNotification, "channel_id");
-        }
-        var saveCompletedNotification = new AndroidNotification
-        {
-            Title = "Save Completed!",
-            FireTime = System.DateTime.Now.AddSeconds(2)
-        };
-        AndroidNotificationCenter.SendNotification(saveCompletedNotification, "channel_id");
-    }
-
-    private void CancelNotifications()
-    {
-
-        AndroidNotificationCenter.CancelAllNotifications();
+        PlayerPrefs.SetInt("IsSaved", 1);
+        PlayerPrefs.SetInt("IsWorking", isWorking ? 1 : 0);
+        PlayerPrefs.SetInt("Minutes", PomodoroBehaviour.Instance.PomodoroTimerModel.GetMinute());
+        PlayerPrefs.SetInt("Seconds", PomodoroBehaviour.Instance.PomodoroTimerModel.GetSecond());
+        PlayerPrefs.SetInt("NumberOfSessions", PomodoroBehaviour.Instance.PomodoroTimerModel.NumberOfSessions);
+        PlayerPrefs.SetInt("ActualSession", PomodoroBehaviour.Instance.PomodoroTimerModel.GetActualSession());
+        PlayerPrefs.SetInt("Paused", PomodoroBehaviour.Instance.PomodoroTimerModel.Paused?1:0);
+        PlayerPrefs.SetInt("WorkTime", PomodoroBehaviour.Instance.PomodoroTimerModel.GetWorkTime());
+        PlayerPrefs.SetInt("PauseTime", PomodoroBehaviour.Instance.PomodoroTimerModel.GetPauseTime());
+        PlayerPrefs.SetString("SaveTime",DateTime.Now.Ticks.ToString());
+        PlayerPrefs.SetInt("IsWorkTime",PomodoroBehaviour.Instance.PomodoroTimerModel.IsWorkTime?1:0);
+        PlayerPrefs.SetInt("StateChanged",stateChanged?1:0);
+        PlayerPrefs.Save();
     }
 }

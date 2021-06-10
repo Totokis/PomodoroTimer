@@ -52,7 +52,6 @@ public class PomodoroTimerViewModel : MonoBehaviour
             if (_previousState != state.text)
             {
                 stateChanged.Invoke();
-                Debug.Log("State changed (pauseTime) invoked");
             }
             _previousState = state.text;
         }
@@ -62,12 +61,12 @@ public class PomodoroTimerViewModel : MonoBehaviour
             if (_previousState != state.text)
             {
                 stateChanged.Invoke();
-                Debug.Log("State changed (workTime) invoked");
             }
             _previousState = state.text;
         }
         else if (PomodoroBehaviour.Instance.PomodoroTimerModel.Done)
         {
+            state.text = "Done";
             workDone.Invoke();
         }
         else
@@ -85,7 +84,6 @@ public class PomodoroTimerViewModel : MonoBehaviour
     }
      void SetButtons()
     {
-        Debug.Log("Buttons set");
         pauseButton.gameObject.SetActive(true);
         resumeButton.gameObject.SetActive(false);
         startButton.gameObject.SetActive(false);

@@ -12,10 +12,6 @@ public class OrientationManager : MonoBehaviour
    {
       
    }
-
-   private void Update()
-   {
-      Logger.Instance.Text = Input.deviceOrientation != DeviceOrientation.Portrait ? "Landscape" : "Portrait";
-   }
+   
    
 }
