@@ -7,6 +7,7 @@ public class PomodoroBehaviour : MonoBehaviour
 {
     static PomodoroTimerModel _pomodoroTimerModel = new PomodoroTimerModel();
     public PomodoroTimerModel PomodoroTimerModel => _pomodoroTimerModel;
+    
     public static PomodoroBehaviour Instance { get; private set; }
 
     void Awake()
@@ -21,6 +22,11 @@ public class PomodoroBehaviour : MonoBehaviour
             Destroy(gameObject);
         }
     }
-    
+
+    public void Restart()
+    {
+        _pomodoroTimerModel = new PomodoroTimerModel();
+        PlayerPrefs.DeleteAll();
+    }
     
 }

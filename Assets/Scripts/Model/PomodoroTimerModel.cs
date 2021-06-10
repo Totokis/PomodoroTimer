@@ -13,7 +13,7 @@ public class PomodoroTimerModel
     private bool _isWorkTime = true;
     private bool _isPauseTime = false;
     private bool _done = false;
-    private bool _paused;
+    private bool _paused = true;
     private int _workTime;
     private int _pauseTime;
     private int _numberOfSessions = 1;

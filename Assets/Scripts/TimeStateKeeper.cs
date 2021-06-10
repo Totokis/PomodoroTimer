@@ -1,11 +1,8 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using Unity.Notifications.Android;
 using UnityEngine;
 using UnityEngine.UI;
-using Unosquare.Swan;
 
 public class TimeStateKeeper : MonoBehaviour
 {
@@ -17,12 +14,14 @@ public class TimeStateKeeper : MonoBehaviour
 
     private void Start()
     {
+        Screen.sleepTimeout = SleepTimeout.NeverSleep;
         var c = new AndroidNotificationChannel()
         {
             Id = "channel_id",
             Name = "Default Channel",
             Importance = Importance.High,
             Description = "Generic notifications",
+            EnableVibration = true,
         };
         AndroidNotificationCenter.RegisterNotificationChannel(c);
     }
@@ -37,10 +36,16 @@ public class TimeStateKeeper : MonoBehaviour
     }
     void ReadFromPlayerPrefs()
     {
-        
         if (PlayerPrefs.GetInt("IsAlreadyWorking") != 1)
             return;
 
+        var saveCompletedNotification = new AndroidNotification
+        {
+            Title = "Read Completed!",
+            FireTime = System.DateTime.Now,
+        };
+        AndroidNotificationCenter.SendNotification(saveCompletedNotification, "channel_id");
+        
         var time = new DateTime(long.Parse(PlayerPrefs.GetString("Time")));
         var minutes = PlayerPrefs.GetInt("Minutes");
         var seconds = PlayerPrefs.GetInt("Seconds");
@@ -80,7 +85,6 @@ public class TimeStateKeeper : MonoBehaviour
             startButton.onClick.Invoke();
             pauseButton.onClick.Invoke();
         }
-
     }
 
     void OnEnable()
@@ -142,24 +146,31 @@ public class TimeStateKeeper : MonoBehaviour
         {
             PlayerPrefs.DeleteAll();
         }
-        Application.Quit();
     }
     
-    private static void MakeNotification()
+    private void MakeNotification()
     {
         if (!PomodoroBehaviour.Instance.PomodoroTimerModel.Paused)
         {
             var minutes = PomodoroBehaviour.Instance.PomodoroTimerModel.GetMinute();
             var seconds = PomodoroBehaviour.Instance.PomodoroTimerModel.GetSecond();
-            var notification = new AndroidNotification();
-            notification.Title = "State changed";
-            notification.Text = "Click me";
-            notification.FireTime = System.DateTime.Now.AddSeconds(minutes * 60 + seconds);
-            AndroidNotificationCenter.SendNotification(notification, "channel_id");
+            var timerEndsNotification = new AndroidNotification
+            {
+                Title = "Times end",
+                Text = pomodoroTimer.State + $"'s ends after {minutes}:{seconds}s !",
+                FireTime = System.DateTime.Now.AddSeconds(minutes * 60 + seconds)
+            };
+            AndroidNotificationCenter.SendNotification(timerEndsNotification, "channel_id");
         }
+        var saveCompletedNotification = new AndroidNotification
+        {
+            Title = "Save Completed!",
+            FireTime = System.DateTime.Now.AddSeconds(2)
+        };
+        AndroidNotificationCenter.SendNotification(saveCompletedNotification, "channel_id");
     }
 
-    private static void CancelNotifications()
+    private void CancelNotifications()
     {
 
         AndroidNotificationCenter.CancelAllNotifications();

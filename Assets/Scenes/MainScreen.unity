@@ -1877,7 +1877,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _audioSource: {fileID: 615867529}
+  startButton: {fileID: 1207505508}
   stopButton: {fileID: 396255440}
+  endButton: {fileID: 176873644}
   _pomodoroTimer: {fileID: 1046037091}
 --- !u!82 &615867529
 AudioSource:
@@ -2000,6 +2002,7 @@ GameObject:
   - component: {fileID: 633258431}
   - component: {fileID: 633258433}
   - component: {fileID: 633258432}
+  - component: {fileID: 633258434}
   m_Layer: 5
   m_Name: Logger
   m_TagString: Untagged
@@ -2123,6 +2126,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 633258430}
   m_CullTransparentMesh: 1
+--- !u!114 &633258434
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 633258430}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41eee9871cedc476b8882ef5dc3dd739, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &635995679
 GameObject:
   m_ObjectHideFlags: 0
@@ -2268,6 +2283,7 @@ GameObject:
   - component: {fileID: 683237125}
   - component: {fileID: 683237127}
   - component: {fileID: 683237126}
+  - component: {fileID: 683237128}
   m_Layer: 5
   m_Name: BackgroundColor
   m_TagString: Untagged
@@ -2332,6 +2348,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 683237124}
   m_CullTransparentMesh: 1
+--- !u!114 &683237128
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 683237124}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d102889dd6aa46f3833f28507d1cb7e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rectTransform: {fileID: 0}
 --- !u!1 &732662483
 GameObject:
   m_ObjectHideFlags: 0
@@ -3441,10 +3470,14 @@ MonoBehaviour:
   seconds: {fileID: 537343382}
   session: {fileID: 488647271}
   state: {fileID: 1119119187}
-  stateChanged:
+  isNotLaunched: 1
+  timerStarts:
     m_PersistentCalls:
       m_Calls: []
   workDone:
+    m_PersistentCalls:
+      m_Calls: []
+  stateChanged:
     m_PersistentCalls:
       m_Calls: []
 --- !u!1 &1065053180
@@ -3928,7 +3961,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a252e33b8e3d848389b23e18fc32ec9d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  onClickStopAnimating: 1
+  onClickStopAnimating: 0
   scale: 1.5
   time: 0.3
 --- !u!1 &1385118351
@@ -4959,7 +4992,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: bb77e9ec651c64decb3a83af84dc3138, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 09f88056d701c49fc8819cb6cfa43656, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -5072,6 +5105,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _audioSource: {fileID: 1806210124}
+  startButton: {fileID: 1207505508}
   muteButton: {fileID: 920230467}
   playButton: {fileID: 1207505508}
   pauseButton: {fileID: 825389452}
@@ -5468,7 +5502,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &2054931150
 MonoBehaviour:
   m_ObjectHideFlags: 0
