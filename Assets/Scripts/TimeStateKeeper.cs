@@ -14,7 +14,8 @@ public class TimeStateKeeper : MonoBehaviour
      readonly bool stateChanged = false;
 
      void Awake()
-    {
+     {
+         Screen.sleepTimeout = SleepTimeout.NeverSleep;
         endButton.onClick.AddListener(() => {
             isWorking = false;
         });
@@ -74,15 +75,15 @@ public class TimeStateKeeper : MonoBehaviour
         var workTime = PlayerPrefs.GetInt("WorkTime");
         var pauseTime = PlayerPrefs.GetInt("PauseTime");
         var actualSession = PlayerPrefs.GetInt("ActualSession");
-        var numberOfSessions = PlayerPrefs.GetInt("NumberOfSessions");
+        var numberOfSessions = PlayerPrefs.GetInt("NumberOfSessions"); 
         var state = PlayerPrefs.GetString("State");
         var paused = PlayerPrefs.GetInt("Paused");
-
+        Logger.Instance.SetText($"Save time: {saveTime.Hour}:{saveTime.Minute}:{saveTime.Second} Minutes rest: {minutesRest}, seconds:{secondsRest}");
         SetDataIntoTimer(numberOfSessions, actualSession, pauseTime, workTime);
         if (paused == 0)
         {
             TimerInProgress(saveTime, minutesRest, secondsRest);
-        }
+        } 
         else
         {
             TimerInPause(minutesRest, secondsRest);
@@ -99,12 +100,13 @@ public class TimeStateKeeper : MonoBehaviour
          startButton.onClick.Invoke();
          pauseButton.onClick.Invoke();
      }
-      void TimerInProgress(DateTime time, int minutes, int seconds)
+      void TimerInProgress(DateTime saveTime, int minutesRest, int secondsRest)
      {
-         var timeDifference = DateTime.Now - time;
-         minutes = minutes - timeDifference.Minutes;
-         seconds = seconds - timeDifference.Seconds;
-         PomodoroBehaviour.Instance.PomodoroTimerModel.SetTimer(minutes >= 0 ? minutes : 0, seconds >= 0 ? seconds : 1);
+         var timeDifference = DateTime.Now - saveTime;
+         var newTime = new TimeSpan(0, minutesRest, secondsRest);
+         minutesRest = (newTime - timeDifference).Minutes;
+         secondsRest = (newTime - timeDifference).Seconds;
+         PomodoroBehaviour.Instance.PomodoroTimerModel.SetTimer(minutesRest >= 0 ? minutesRest : 0, secondsRest >= 0 ? secondsRest : 1);
          startButton.onClick.Invoke();
      }
       static void SetDataIntoTimer(int numberOfSessions, int actualSession, int pauseTime, int workTime)
@@ -135,18 +137,21 @@ public class TimeStateKeeper : MonoBehaviour
     }
      void SetIntoPlayerPrefs()
     {
-        PlayerPrefs.SetInt("IsSaved", 1);
-        PlayerPrefs.SetInt("IsWorking", isWorking ? 1 : 0);
-        PlayerPrefs.SetInt("Minutes", PomodoroBehaviour.Instance.PomodoroTimerModel.GetMinute());
-        PlayerPrefs.SetInt("Seconds", PomodoroBehaviour.Instance.PomodoroTimerModel.GetSecond());
-        PlayerPrefs.SetInt("NumberOfSessions", PomodoroBehaviour.Instance.PomodoroTimerModel.NumberOfSessions);
-        PlayerPrefs.SetInt("ActualSession", PomodoroBehaviour.Instance.PomodoroTimerModel.GetActualSession());
-        PlayerPrefs.SetInt("Paused", PomodoroBehaviour.Instance.PomodoroTimerModel.Paused ? 1 : 0);
-        PlayerPrefs.SetInt("WorkTime", PomodoroBehaviour.Instance.PomodoroTimerModel.GetWorkTime());
-        PlayerPrefs.SetInt("PauseTime", PomodoroBehaviour.Instance.PomodoroTimerModel.GetPauseTime());
-        PlayerPrefs.SetString("SaveTime", DateTime.Now.Ticks.ToString());
-        PlayerPrefs.SetInt("IsWorkTime", PomodoroBehaviour.Instance.PomodoroTimerModel.IsWorkTime ? 1 : 0);
-        PlayerPrefs.SetInt("StateChanged", stateChanged ? 1 : 0);
-        PlayerPrefs.Save();
+        if (isWorking)
+        {
+            PlayerPrefs.SetInt("IsSaved", 1);
+            PlayerPrefs.SetInt("IsWorking", isWorking ? 1 : 0);
+            PlayerPrefs.SetInt("Minutes", PomodoroBehaviour.Instance.PomodoroTimerModel.GetMinute());
+            PlayerPrefs.SetInt("Seconds", PomodoroBehaviour.Instance.PomodoroTimerModel.GetSecond());
+            PlayerPrefs.SetInt("NumberOfSessions", PomodoroBehaviour.Instance.PomodoroTimerModel.NumberOfSessions);
+            PlayerPrefs.SetInt("ActualSession", PomodoroBehaviour.Instance.PomodoroTimerModel.GetActualSession());
+            PlayerPrefs.SetInt("Paused", PomodoroBehaviour.Instance.PomodoroTimerModel.Paused ? 1 : 0);
+            PlayerPrefs.SetInt("WorkTime", PomodoroBehaviour.Instance.PomodoroTimerModel.GetWorkTime());
+            PlayerPrefs.SetInt("PauseTime", PomodoroBehaviour.Instance.PomodoroTimerModel.GetPauseTime());
+            PlayerPrefs.SetString("SaveTime", DateTime.Now.Ticks.ToString());
+            PlayerPrefs.SetInt("IsWorkTime", PomodoroBehaviour.Instance.PomodoroTimerModel.IsWorkTime ? 1 : 0);
+            PlayerPrefs.SetInt("StateChanged", stateChanged ? 1 : 0);
+            PlayerPrefs.Save();
+        }
     }
 }

@@ -23,5 +23,10 @@ public class Logger : MonoBehaviour
          Destroy(this);
       }
    }
-   
+
+   public void SetText(string text)
+   {
+      Text = text;
+   }
+
 }

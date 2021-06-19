@@ -20,6 +20,9 @@ public class PomodoroTimerViewModel : MonoBehaviour
     [SerializeField]  TMP_Text seconds;
     [SerializeField]  TMP_Text session;
     [SerializeField]  TMP_Text state;
+    [FormerlySerializedAs("_backgroundColorizer")]
+    [Header("Others")] 
+    [SerializeField] StateColorizer stateColorizer;
     public bool isRunning = false;
     public UnityEvent timerStarts = new UnityEvent();
     public UnityEvent workDone = new UnityEvent();
@@ -48,6 +51,7 @@ public class PomodoroTimerViewModel : MonoBehaviour
         session.text = $"{PomodoroBehaviour.Instance.PomodoroTimerModel.GetActualSession()}/{PomodoroBehaviour.Instance.PomodoroTimerModel.NumberOfSessions}";
         if (PomodoroBehaviour.Instance.PomodoroTimerModel.IsPauseTime)
         {
+            stateColorizer.SetPauseColor();
             state.text = "Pause";
             if (_previousState != state.text)
             {
@@ -57,6 +61,7 @@ public class PomodoroTimerViewModel : MonoBehaviour
         }
         else if (PomodoroBehaviour.Instance.PomodoroTimerModel.IsWorkTime)
         {
+            stateColorizer.SetWorkColor();
             state.text = "Work";
             if (_previousState != state.text)
             {

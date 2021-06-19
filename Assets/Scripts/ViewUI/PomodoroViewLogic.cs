@@ -21,7 +21,7 @@ public class PomodoroViewLogic : MonoBehaviour
     void SwitchToSetter()
     {
         pomodoroTimeSetter.gameObject.SetActive(true);
-        LeanTween.moveX(twoPanels, 1080f, 0.3f);
+        LeanTween.moveX(twoPanels, 0, 0.3f);
         StartCoroutine(SetToFalse(pomodoroTimer)); 
     }
     private IEnumerator SetToFalse(GameObject o)
@@ -32,7 +32,7 @@ public class PomodoroViewLogic : MonoBehaviour
     public void SwitchToTimer()
     {
         pomodoroTimer.gameObject.SetActive(true);
-        LeanTween.moveX(twoPanels, 0f, 0.3f);
+        LeanTween.moveX(twoPanels, -1080f, 0.3f);
         StartCoroutine(SetToFalse(pomodoroTimeSetter)); 
     }
 
