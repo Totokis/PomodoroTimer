@@ -6,11 +6,11 @@ using UnityEngine;
 
 public class JumpingInput : MonoBehaviour
 {
-    private void Awake()
+     void Awake()
     {
         GetComponent<TMP_InputField>().onSelect.AddListener((_)=>{LeanTween.cancel(gameObject);});
     }
-    private void OnEnable()
+     void OnEnable()
     {
         LeanTween.moveLocal(gameObject, Vector3.up*10, 0.3f).setLoopPingPong();
     }

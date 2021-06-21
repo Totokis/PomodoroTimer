@@ -1,9 +1,9 @@
 {
     "m_SelectedDeviceId": "BUC4C16907000496",
     "m_SelectedPackage": {
-        "deviceId": "",
-        "name": "",
-        "processId": 0,
+        "deviceId": "BUC4C16907000496",
+        "name": "com.PawelJanuszPolsl.PomodoroTimer",
+        "processId": 5363,
         "exited": false
     },
     "m_SelectedPriority": 0,
@@ -12,6 +12,30 @@
             "deviceId": "BUC4C16907000496",
             "name": "com.huawei.android.launcher",
             "processId": 2628,
+            "exited": true
+        },
+        {
+            "deviceId": "BUC4C16907000496",
+            "name": "com.PawelJanuszPolsl.PomodoroTimer",
+            "processId": 18858,
+            "exited": true
+        },
+        {
+            "deviceId": "BUC4C16907000496",
+            "name": "com.PawelJanuszPolsl.PomodoroTimer",
+            "processId": 20629,
+            "exited": true
+        },
+        {
+            "deviceId": "BUC4C16907000496",
+            "name": "com.huawei.android.launcher",
+            "processId": 2546,
+            "exited": false
+        },
+        {
+            "deviceId": "BUC4C16907000496",
+            "name": "com.PawelJanuszPolsl.PomodoroTimer",
+            "processId": 5363,
             "exited": false
         }
     ],

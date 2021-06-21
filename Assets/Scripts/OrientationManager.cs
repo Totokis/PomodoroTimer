@@ -6,9 +6,9 @@ using UnityEngine.Serialization;
 
 public class OrientationManager : MonoBehaviour
 {
-   [SerializeField] RectTransform rectTransform;
+   [SerializeField]  RectTransform rectTransform;
 
-   private void Awake()
+    void Awake()
    {
       
    }

@@ -8,18 +8,20 @@ using ViewUI;
 public class PomodoroTimeSetterViewModel : MonoBehaviour
 {
     [Header("Timer Setter Inputs")]
-    [SerializeField] Button startTimer;
-    [SerializeField] LongClickButton incrementWork;
-    [SerializeField] LongClickButton incrementPause;
-    [SerializeField] LongClickButton decrementWork;
-    [SerializeField] LongClickButton decrementPause;
-    [SerializeField] TMP_InputField numberOfSessions;
+    [SerializeField]
+     Button startTimer;
+    [SerializeField]  LongClickButton incrementWork;
+    [SerializeField]  LongClickButton incrementPause;
+    [SerializeField]  LongClickButton decrementWork;
+    [SerializeField]  LongClickButton decrementPause;
+    [SerializeField]  TMP_InputField numberOfSessions;
     [Header("Timer Setter Outputs")]
-    [SerializeField] TMP_Text workTime;
-    [SerializeField] TMP_Text pauseTime;
-    
+    [SerializeField]
+     TMP_Text workTime;
+    [SerializeField]  TMP_Text pauseTime;
 
-    void Awake()
+
+     void Awake()
     {
         startTimer.onClick.AddListener(() => {
             PomodoroBehaviour.Instance.PomodoroTimerModel.StartTimer();
@@ -57,7 +59,7 @@ public class PomodoroTimeSetterViewModel : MonoBehaviour
             );
     }
 
-    void Update()
+     void Update()
     {
         workTime.text = PomodoroBehaviour.Instance.PomodoroTimerModel.GetWorkTime().ToString();
         pauseTime.text = PomodoroBehaviour.Instance.PomodoroTimerModel.GetPauseTime().ToString();

@@ -6,11 +6,12 @@ using UnityEngine;
 
 public class Logger : MonoBehaviour
 {
-   static public Logger Instance { get; private set; }
-   TMP_Text _text;
+   static public Logger Instance { get;  set; }
+
+    TMP_Text _text;
    public String Text { get => _text.text; set => _text.text = value; }
-   
-   void Awake()
+
+    void Awake()
    {
       if (Instance == null)
       {

@@ -8,14 +8,14 @@ namespace ViewUI
 {
     public class LongClickButton : MonoBehaviour, IPointerDownHandler,IPointerUpHandler
     {
-        [SerializeField] float requiredHoldTime;
+        [SerializeField]  float requiredHoldTime;
         public UnityEvent onLongClick = new UnityEvent();
         public UnityEvent onClick = new UnityEvent();
 
-        bool _pointerDown;
-        float _pointerDownTimer;
+         bool _pointerDown;
+         float _pointerDownTimer;
 
-        void Awake()
+         void Awake()
         {
             GetComponent<Button>()?.onClick.AddListener(()=>onClick.Invoke());
         }
@@ -30,12 +30,12 @@ namespace ViewUI
             _pointerDown = false;
             Reset();
         }
-        void Reset()
+         void Reset()
         {
             _pointerDownTimer = 0;
         }
 
-        void Update()
+         void Update()
         {
 
             if (_pointerDown)

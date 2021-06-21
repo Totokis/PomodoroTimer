@@ -7,22 +7,23 @@ using UnityEngine.UI;
 
 public class PomodoroBehaviourTest : MonoBehaviour
 {
-    [SerializeField] int workTime;
-    [SerializeField] int pauseTime;
-    [SerializeField] int numberOfSessions;
-    [SerializeField] Button start;
-    [SerializeField] Button pause;
-    [SerializeField] Button resume;
-    [FormerlySerializedAs("setSecondTo_1")] [SerializeField] Button SetTimeTo_00_01;
-    [SerializeField] Text minutes;
-    [SerializeField] Text seconds;
-    [SerializeField] Text state;
-    [SerializeField] Text actualSession;
-    [SerializeField] Text done;
-    PomodoroTimerModel _pomodoroTimerModel = new PomodoroTimerModel();
-    float _nextUpdate;
+    [SerializeField]  int workTime;
+    [SerializeField]  int pauseTime;
+    [SerializeField]  int numberOfSessions;
+    [SerializeField]  Button start;
+    [SerializeField]  Button pause;
+    [SerializeField]  Button resume;
+    [FormerlySerializedAs("setSecondTo_1")] [SerializeField]
+     Button SetTimeTo_00_01;
+    [SerializeField]  Text minutes;
+    [SerializeField]  Text seconds;
+    [SerializeField]  Text state;
+    [SerializeField]  Text actualSession;
+    [SerializeField]  Text done;
+     PomodoroTimerModel _pomodoroTimerModel = new PomodoroTimerModel();
+     float _nextUpdate;
 
-    private void Awake()
+     void Awake()
     {
         _pomodoroTimerModel.SetPauseTime(pauseTime);
         _pomodoroTimerModel.SetWorkTime(workTime);
@@ -33,7 +34,7 @@ public class PomodoroBehaviourTest : MonoBehaviour
        
     }
 
-    private void Update()
+     void Update()
     {
         done.text = _pomodoroTimerModel.Done ? "Done: True" : "Done: False";
         

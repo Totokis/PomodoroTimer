@@ -1,25 +1,25 @@
 
 public class PomodoroTimerModel
 {
-    private const int MAXPauseValue = 99;
-    private const int MINPauseValue = 1;
-    private const int MAXWorkValue = 99;
-    private const int MINWorkValue = 1;
+     const int MAXPauseValue = 99;
+     const int MINPauseValue = 1;
+     const int MAXWorkValue = 99;
+     const int MINWorkValue = 1;
     public int MaxPauseValue => MAXPauseValue;
     public int MinPauseTime => MINPauseValue;
     public int MaxWorkValue => MAXWorkValue;
     public int MinWorkValue => MINWorkValue;
     
-    private bool _isWorkTime = true;
-    private bool _isPauseTime = false;
-    private bool _done = false;
-    private bool _paused = true;
-    private int _workTime;
-    private int _pauseTime;
-    private int _numberOfSessions = 1;
-    private int _actualSession = 0;
-    private int _minuteCounter = 0;
-    private int _secondsCounter = 0;
+     bool _isWorkTime = true;
+     bool _isPauseTime = false;
+     bool _done = false;
+     bool _paused = true;
+     int _workTime;
+     int _pauseTime;
+     int _numberOfSessions = 1;
+     int _actualSession = 0;
+     int _minuteCounter = 0;
+     int _secondsCounter = 0;
     public bool IsWorkTime
     {
         get => _isWorkTime;
@@ -130,7 +130,7 @@ public class PomodoroTimerModel
             }
         }
     }
-    private void ResetTimer()
+     void ResetTimer()
     {
         _actualSession = 0;
         _isWorkTime = true;
@@ -175,7 +175,7 @@ public class PomodoroTimerModel
             _secondsCounter--;
         }
     }
-    private void SwitchState()
+     void SwitchState()
     {
         if (_isWorkTime)
         {

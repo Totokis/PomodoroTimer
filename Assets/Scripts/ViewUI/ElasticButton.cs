@@ -6,8 +6,8 @@ using UnityEngine.UI;
 
 public class ElasticButton : MonoBehaviour
 {
-    private Button _button;
-    private void Awake()
+     Button _button;
+     void Awake()
     {
         _button = GetComponent<Button>();
         if (_button != null)
@@ -16,7 +16,7 @@ public class ElasticButton : MonoBehaviour
         }
     }
 
-    void Tween()
+     void Tween()
     {
         LeanTween.cancel(gameObject);
         var gameObj = gameObject;

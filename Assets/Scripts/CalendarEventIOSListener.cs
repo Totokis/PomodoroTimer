@@ -1,11 +1,11 @@
 ﻿using System;
 using UnityEngine;
 
-class CalendarEventIOSListener : MonoBehaviour
+internal class CalendarEventIOSListener : MonoBehaviour
 {
-    static int LastListenerId;
+     static int LastListenerId;
 
-    CalendarEvent.DoneEventHandler Done;
+     CalendarEvent.DoneEventHandler Done;
 
     internal static string Create(CalendarEvent.DoneEventHandler Done)
     {
@@ -20,7 +20,7 @@ class CalendarEventIOSListener : MonoBehaviour
     }
 
     // ReSharper disable once UnusedMember.Local
-    void CallDoneAndDestroy(string EventId)
+     void CallDoneAndDestroy(string EventId)
     {
         Done?.Invoke(Convert.ToInt32(EventId));
         Destroy(gameObject);

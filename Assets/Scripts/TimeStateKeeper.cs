@@ -78,7 +78,8 @@ public class TimeStateKeeper : MonoBehaviour
         var numberOfSessions = PlayerPrefs.GetInt("NumberOfSessions"); 
         var state = PlayerPrefs.GetString("State");
         var paused = PlayerPrefs.GetInt("Paused");
-        Logger.Instance.SetText($"Save time: {saveTime.Hour}:{saveTime.Minute}:{saveTime.Second} Minutes rest: {minutesRest}, seconds:{secondsRest}");
+        if(Logger.Instance!=null)
+            Logger.Instance.Text= ($"Save time: {saveTime.Hour}:{saveTime.Minute}:{saveTime.Second} Minutes rest: {minutesRest}, seconds:{secondsRest}");
         SetDataIntoTimer(numberOfSessions, actualSession, pauseTime, workTime);
         if (paused == 0)
         {
@@ -93,14 +94,14 @@ public class TimeStateKeeper : MonoBehaviour
         isStateSaved = false;
         PlayerPrefs.DeleteAll();
     }
-      void TimerInPause(int minutes, int seconds)
+     void TimerInPause(int minutes, int seconds)
      {
          PomodoroBehaviour.Instance.PomodoroTimerModel.PauseTimer();
          PomodoroBehaviour.Instance.PomodoroTimerModel.SetTimer(minutes >= 0 ? minutes : 0, seconds >= 0 ? seconds : 1);
          startButton.onClick.Invoke();
          pauseButton.onClick.Invoke();
      }
-      void TimerInProgress(DateTime saveTime, int minutesRest, int secondsRest)
+     void TimerInProgress(DateTime saveTime, int minutesRest, int secondsRest)
      {
          var timeDifference = DateTime.Now - saveTime;
          var newTime = new TimeSpan(0, minutesRest, secondsRest);
@@ -109,7 +110,7 @@ public class TimeStateKeeper : MonoBehaviour
          PomodoroBehaviour.Instance.PomodoroTimerModel.SetTimer(minutesRest >= 0 ? minutesRest : 0, secondsRest >= 0 ? secondsRest : 1);
          startButton.onClick.Invoke();
      }
-      static void SetDataIntoTimer(int numberOfSessions, int actualSession, int pauseTime, int workTime)
+     static void SetDataIntoTimer(int numberOfSessions, int actualSession, int pauseTime, int workTime)
      {
 
          PomodoroBehaviour.Instance.PomodoroTimerModel.SetNumberOfSessions(numberOfSessions);

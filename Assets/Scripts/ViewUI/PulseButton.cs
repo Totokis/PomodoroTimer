@@ -6,13 +6,13 @@ using UnityEngine.UI;
 
 public class PulseButton : MonoBehaviour
 {
-    [SerializeField] bool onClickStopAnimating = false;
-    [SerializeField] float scale = 1.5f;
-    [SerializeField] float time = 0.3f;
-    RectTransform _rect;
-    Button _button;
-    bool _animate = true;
-    void Awake()
+    [SerializeField]  bool onClickStopAnimating = false;
+    [SerializeField]  float scale = 1.5f;
+    [SerializeField]  float time = 0.3f;
+     RectTransform _rect;
+     Button _button;
+     bool _animate = true;
+     void Awake()
     {
         _rect = GetComponent<RectTransform>();
         _button = GetComponent<Button>();
@@ -21,13 +21,13 @@ public class PulseButton : MonoBehaviour
                 _animate = false;
         }));
     }
-    void OnEnable()
+     void OnEnable()
     {
        if(_animate)
            PulseAnimation();
     }
 
-    void PulseAnimation()
+     void PulseAnimation()
     {
         LeanTween.scale(_rect, new Vector2(scale, scale), time).setLoopPingPong(3).setOnComplete(() => {
             if (_animate)

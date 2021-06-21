@@ -8,7 +8,8 @@ public class PomodoroTimerViewModel : MonoBehaviour
 {
     [FormerlySerializedAs("pauseResumeButton")]
     [Header("Timer Inputs")]
-    [SerializeField]  Button pauseButton;
+    [SerializeField]
+     Button pauseButton;
     [SerializeField]  Button resumeButton;
     [SerializeField]  Button startButton;
     [SerializeField]  Button muteButton;
@@ -16,19 +17,21 @@ public class PomodoroTimerViewModel : MonoBehaviour
     [SerializeField]  Button endButton;
     [SerializeField]  Button SetTimeTo_00_01;
     [Header("Timer Outputs")]
-    [SerializeField]  TMP_Text minutes;
+    [SerializeField]
+     TMP_Text minutes;
     [SerializeField]  TMP_Text seconds;
     [SerializeField]  TMP_Text session;
     [SerializeField]  TMP_Text state;
     [FormerlySerializedAs("_backgroundColorizer")]
     [Header("Others")] 
-    [SerializeField] StateColorizer stateColorizer;
+    [SerializeField]
+     StateColorizer stateColorizer;
     public bool isRunning = false;
     public UnityEvent timerStarts = new UnityEvent();
     public UnityEvent workDone = new UnityEvent();
     public UnityEvent stateChanged = new UnityEvent();
-    float _nextUpdate;
-    string _previousState = "Work";
+     float _nextUpdate;
+     string _previousState = "Work";
     public string State { get => state.text; set => state.text = value; }
      void Awake()
     {

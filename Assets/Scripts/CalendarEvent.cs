@@ -1,13 +1,13 @@
 using System;
 using UnityEngine;
 
-static class CalendarEvent
+internal static class CalendarEvent
 {
-    static readonly string PlatformNotSupportedMessage = $"This platform isn't supported by {nameof(CalendarEvent)}";
+     static readonly string PlatformNotSupportedMessage = $"This platform isn't supported by {nameof(CalendarEvent)}";
 
 #if UNITY_ANDROID
-    static readonly AndroidJavaObject AndroidActivity = new AndroidJavaClass("com.unity3d.player.UnityPlayer").GetStatic<AndroidJavaObject>("currentActivity");
-    static readonly AndroidJavaClass CalendarEventJavaClass = new AndroidJavaClass("calendarevent.CalendarEvent");
+     static readonly AndroidJavaObject AndroidActivity = new AndroidJavaClass("com.unity3d.player.UnityPlayer").GetStatic<AndroidJavaObject>("currentActivity");
+     static readonly AndroidJavaClass CalendarEventJavaClass = new AndroidJavaClass("calendarevent.CalendarEvent");
 #endif
 
 #if UNITY_IOS

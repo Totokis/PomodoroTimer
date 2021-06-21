@@ -3,13 +3,13 @@ using UnityEngine.UI;
 
 public class AlarmSound : MonoBehaviour
 {
-    [SerializeField] AudioSource _audioSource;
-    [SerializeField] Button startButton;
-    [SerializeField] Button stopButton;
-    [SerializeField] Button endButton;
-    [SerializeField] PomodoroTimerViewModel _pomodoroTimer;
+    [SerializeField]  AudioSource _audioSource;
+    [SerializeField]  Button startButton;
+    [SerializeField]  Button stopButton;
+    [SerializeField]  Button endButton;
+    [SerializeField]  PomodoroTimerViewModel _pomodoroTimer;
 
-    private void Awake()
+     void Awake()
     {
         _pomodoroTimer.stateChanged.AddListener(() => {
             _audioSource.Play();
