@@ -15,6 +15,7 @@ public class SettingsPanel : MonoBehaviour
     [SerializeField] List<Toggle> toggles;
     [SerializeField] FirebaseProgressSaver firebaseProgressSaver;
     string _settingsValue;
+    public string SettingsValue => _settingsValue;
     public List<Toggle> Toggles => toggles;
     
     void Awake()
@@ -49,6 +50,8 @@ public class SettingsPanel : MonoBehaviour
     void SwitchToPanels()
     {
         LeanTween.moveY(gameObject, 1920+960, 0.3f);
+        firebaseProgressSaver.SaveWorkingDaysSettings();
+        
     }
     void SwitchToSettings()
     {

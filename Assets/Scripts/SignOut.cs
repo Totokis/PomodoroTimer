@@ -17,9 +17,10 @@ public class SignOut : MonoBehaviour
         }
     }
     void SignOutAndGoToLoginPage()
-    {
-       FirebaseAuth.DefaultInstance.SignOut();
-       SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
+    { 
+        PlayerPrefs.DeleteAll(); 
+        FirebaseAuth.DefaultInstance.SignOut(); 
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
 
     }
 }

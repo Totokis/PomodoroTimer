@@ -17,8 +17,7 @@ public class PomodoroTimerViewModel : MonoBehaviour
     [SerializeField]  Button endButton;
     [SerializeField]  Button SetTimeTo_00_01;
     [Header("Timer Outputs")]
-    [SerializeField]
-     TMP_Text minutes;
+    [SerializeField]  TMP_Text minutes;
     [SerializeField]  TMP_Text seconds;
     [SerializeField]  TMP_Text session;
     [SerializeField]  TMP_Text state;
@@ -49,8 +48,8 @@ public class PomodoroTimerViewModel : MonoBehaviour
     }
      void Update()
     {
-        minutes.text = PomodoroBehaviour.Instance.PomodoroTimerModel.GetMinute().ToString();
-        seconds.text = PomodoroBehaviour.Instance.PomodoroTimerModel.GetSecond().ToString();
+        minutes.text = PomodoroBehaviour.Instance.PomodoroTimerModel.GetMinute().ToString("00");
+        seconds.text = PomodoroBehaviour.Instance.PomodoroTimerModel.GetSecond().ToString("00");
         session.text = $"{PomodoroBehaviour.Instance.PomodoroTimerModel.GetActualSession()}/{PomodoroBehaviour.Instance.PomodoroTimerModel.NumberOfSessions}";
         if (PomodoroBehaviour.Instance.PomodoroTimerModel.IsPauseTime)
         {

@@ -15,13 +15,14 @@ public class BackgroundMusic : MonoBehaviour
     [SerializeField]  Button resumeButton;
     [SerializeField]  Button stopStartButton;
     [SerializeField]  PomodoroTimerViewModel pomodoroTimer;
+    [SerializeField]  Slider volumeSlider;
      bool isPauseTime = false;
 
      void Awake()
     {
-        muteButton.onClick.AddListener(() => {
-            _audioSource.enabled = !_audioSource.enabled;
-        });
+        // muteButton.onClick.AddListener(() => {
+        //     _audioSource.enabled = !_audioSource.enabled;
+        // });
         pauseButton.onClick.AddListener((() => {
             _audioSource.Pause();
         }));
@@ -32,6 +33,10 @@ public class BackgroundMusic : MonoBehaviour
 
             _audioSource.enabled = true;
             _audioSource.Play();
+        });
+
+        volumeSlider.onValueChanged.AddListener(value => {
+            _audioSource.volume = value;
         });
         
         stopStartButton.onClick.AddListener(() => {

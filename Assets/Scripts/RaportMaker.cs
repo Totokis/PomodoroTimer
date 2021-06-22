@@ -13,7 +13,7 @@ public class RaportMaker : MonoBehaviour
    [SerializeField] PomodoroTimerViewModel _pomodoroTimerViewModel;
    [SerializeField] Button startButton;
    [SerializeField] Button pauseButton;
-   DateTime _startTime;
+   DateTime? _startTime;
    readonly string _raport = "";
    public string Raport=>_raport;
 
@@ -24,7 +24,7 @@ public class RaportMaker : MonoBehaviour
          Instance = this;
          _pomodoroTimerViewModel.workDone.AddListener(WorkDone);
          startButton.onClick.AddListener(() => {
-            _startTime = DateTime.Now;
+            _startTime ??= DateTime.Now;
          });
       }
       else
@@ -38,11 +38,11 @@ public class RaportMaker : MonoBehaviour
    {
       var numberOfSessions = PomodoroBehaviour.Instance.PomodoroTimerModel.NumberOfSessions;
       var completedSessions = PomodoroBehaviour.Instance.PomodoroTimerModel.GetActualSession();
-      var startTime = $"start time: {this._startTime.Hour}:{this._startTime.Minute}";
+      var startTime = $"start time: {this._startTime?.Hour}:{this._startTime?.Minute}";
       var totalWorkTime = DateTime.Now - this._startTime;
-      var totalTime = $"total time: {totalWorkTime.Hours}:{totalWorkTime.Minutes}";
+      var totalTime = $"total time: {totalWorkTime?.Hours}:{totalWorkTime?.Minutes}";
       Logger.Instance.SetText($"Number of sessions: {numberOfSessions} \n completed sessions: {completedSessions} \n {startTime} \n {totalTime}");
-      var doneEventHandler = new CalendarEvent.DoneEventHandler((_) => {
+      var doneEventHandler = new CalendarEvent.DoneEventHandler(_ => {
          Debug.Log("Done");
       });
       if (Application.isEditor)
@@ -60,7 +60,9 @@ public class RaportMaker : MonoBehaviour
 #endif
       if (Permission.HasUserAuthorizedPermission("android.permission.WRITE_CALENDAR"))
       {
-         CalendarEvent.AddEvent("Today you completed your work !", this._startTime, DateTime.Now, false, doneEventHandler);
+         DateTime? dateTime = _startTime;
+         if (dateTime != null)
+            CalendarEvent.AddEvent("Today you completed your work !", (DateTime)dateTime, DateTime.Now, false, doneEventHandler);
       }else
       {
          Debug.Log("Permission WRITE_CALENDAR Denied");

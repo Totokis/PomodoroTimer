@@ -9,7 +9,8 @@ public class Logger : MonoBehaviour
    static public Logger Instance { get;  set; }
 
     TMP_Text _text;
-   public String Text { get => _text.text; set => _text.text = value; }
+    private string voidString;
+   public String Text { get => _text.text; set => voidString = value; }
 
     void Awake()
    {

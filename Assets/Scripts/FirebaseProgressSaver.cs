@@ -21,20 +21,13 @@ public class FirebaseProgressSaver : MonoBehaviour
     string _settingsValue;
     public string SettingsValue => _settingsValue;
     
-    void Start()
+    IEnumerator Start()
     {
         _user = FirebaseAuth.DefaultInstance.CurrentUser;
         _databaseReference = FirebaseDatabase.DefaultInstance.RootReference;
         pomodoroTimerViewModel.workDone.AddListener(SaveProgress);
-        StartCoroutine(LoadDaysFromFirebase());
+        yield return LoadDaysFromFirebase();
         LoadProgress();
-    }
-    void SaveProgress()
-    {
-        if(LastWorkingDateIsNotToday())
-            _daysInRow++;
-        strikeChanged.Invoke();
-        SaveStrike();
     }
 
     IEnumerator LoadDaysFromFirebase()
@@ -53,6 +46,7 @@ public class FirebaseProgressSaver : MonoBehaviour
         {
             Debug.Log("Error loading saved days");
         }
+        yield return new WaitForEndOfFrame();
     }
 
     async void LoadProgress()
@@ -68,8 +62,10 @@ public class FirebaseProgressSaver : MonoBehaviour
         }
         foreach (var day in daysInterval)
         {
+            Debug.Log($"Interval: {day}");
             if (DayIsWorking(day))
             {
+                 Debug.Log($"Working day: {day}");
                 ResetStrike();
                 break;
             }
@@ -104,7 +100,8 @@ public class FirebaseProgressSaver : MonoBehaviour
     private bool DayIsWorking(DayOfWeek day)
     {
         var toggles = SettingsPanel.Instance.Toggles;
-        int indexOfDay = (int)day;
+        Debug.Log($"Settings: {GetSettingsAsValue()}");
+        int indexOfDay = (int)day==0?7:(int)day-1;
         return toggles[indexOfDay].isOn;
     }
     private async Task<DateTime> GetSavedDate()
@@ -144,8 +141,8 @@ public class FirebaseProgressSaver : MonoBehaviour
         yield return new WaitUntil(() => saveDayStrikeTask.IsCompleted);
         var saveTodayDateTask = _databaseReference.Child("users").Child(_user.UserId).Child("LastWorkingDate").SetValueAsync(DateTime.Now.ToString("d"));
         yield return new WaitUntil(() => saveTodayDateTask.IsCompleted);
-        var saveDaysOfWork = _databaseReference.Child("users").Child(_user.UserId).Child("DaysOfWork").SetValueAsync(GetSettingsAsValue());
-        
+        yield return SaveDaysOfWork();
+
     }
     private string GetSettingsAsValue()
     {
@@ -156,5 +153,22 @@ public class FirebaseProgressSaver : MonoBehaviour
             value += toggle.isOn ? "1" : "0";
         }
         return value;
+    }
+
+    public void SaveWorkingDaysSettings()
+    {
+        StartCoroutine(SaveDaysOfWork());
+    }
+    private IEnumerator SaveDaysOfWork()
+    {
+        var saveDaysOfWork = _databaseReference.Child("users").Child(_user.UserId).Child("DaysOfWork").SetValueAsync(GetSettingsAsValue());
+        yield return new WaitUntil(() => saveDaysOfWork.IsCompleted);
+    }
+    void SaveProgress()
+    {
+        if(LastWorkingDateIsNotToday())
+            _daysInRow++;
+        strikeChanged.Invoke();
+        SaveStrike();
     }
 }
