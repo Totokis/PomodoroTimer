@@ -117,7 +117,7 @@ public class FirebaseProgressSaver : MonoBehaviour
                 {
                     _lastWorkingDate = DateTime.Now.AddDays(-1);
                     return _lastWorkingDate;
-                }
+                }   
                 Debug.Log("Last saved date: "+task.Result.Value.ToString());
                 _lastWorkingDate = Convert.ToDateTime(task.Result.Value.ToString());
                 return _lastWorkingDate;
